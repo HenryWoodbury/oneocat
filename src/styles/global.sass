@@ -1,0 +1,105 @@
+@import "theme.sass"
+
+:root
+  font-size: 16px
+
+// Some normalizing
+// https://github.com/sindresorhus/modern-normalize/blob/main/modern-normalize.css
+
+*,
+::before,
+::after
+  box-sizing: border-box
+
+html
+  line-height: 1.15
+  -webkit-text-size-adjust: 100%
+  -moz-tab-size: 4
+  tab-size: 4
+
+small
+  font-size: 80%
+
+sub,
+sup
+  font-size: 75%
+  line-height: 0
+  position: relative
+  vertical-align: baseline
+
+sub
+  bottom: -0.25em
+
+sup
+  top: -0.5em
+
+table
+  text-indent: 0
+  border-color: inherit
+
+button,
+input,
+optgroup,
+select,
+textarea
+  font-family: inherit
+  font-size: 100%
+  line-height: 1.15
+  margin: 0
+
+button,
+select
+  text-transform: none
+
+button,
+[type='button'],
+[type='reset'],
+[type='submit']
+  -webkit-appearance: button
+
+b,
+strong
+  font-weight: bolder
+
+hr
+  height: 0
+  color: inherit
+
+legend
+  padding: 0
+
+::-moz-focus-inner
+  border-style: none
+  padding: 0
+
+:-moz-focusring
+  outline: 1px dotted ButtonText
+
+:-moz-ui-invalid
+  box-shadow: none
+
+::-webkit-inner-spin-button,
+::-webkit-outer-spin-button
+  height: auto
+
+::-webkit-search-decoration
+  -webkit-appearance: none
+
+[type='search']
+  -webkit-appearance: textfield
+  outline-offset: -2px
+
+body
+  margin: 0
+  font-family: $bodyFontFamily
+  font-weight: $bodyFontWeight
+  font-size: $bodyFontSize
+  background-color: $eyeGold
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+
+code
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace
+
+a
+  color: $eyeBlue

@@ -1,6 +1,6 @@
 # Carpeye
 
-A rotating carp eye
+Carp and Eye Library
 
 ## Available Scripts
 

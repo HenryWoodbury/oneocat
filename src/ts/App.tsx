@@ -7,9 +7,6 @@ function App() {
     <div className={css.app}>
       <header className={css.appHeader}>
         <img src={carpe} className={css.appLogo} alt="logo" />
-        <h1>
-          carpeye
-        </h1>
       </header>
     </div>
   );

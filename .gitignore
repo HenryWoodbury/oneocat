@@ -1,25 +1,4 @@
-# logs
-logs
-*.log
-npm-debug.log*
-
-# dependencies
-/node_modules
-
-# testing
-/coverage
-
-# production
-/build
 dist
-
-# ide
-.vscode
-.history
-
-# environment
+node_modules
 .DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env

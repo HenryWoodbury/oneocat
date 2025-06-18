@@ -1,0 +1,133 @@
+.waves {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  svg {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+  }
+  svg:nth-child(1) {
+    left: 0;
+    bottom: -5vh;
+  }
+  svg:nth-child(2) {
+    left: 0;
+    bottom: 0;
+  }
+  svg:nth-child(3) {
+    left: 0;
+    bottom: 5vh;
+  }
+  svg:nth-child(4) {
+    left: 0;
+    bottom: 10vh;
+  }
+  svg:nth-child(5) {
+    left: 0;
+    bottom: 15vh;
+  }
+  svg:nth-child(6) {
+    left: 0;
+    bottom: 20vh;
+  }
+  svg:nth-child(7) {
+    left: 0;
+    bottom: 25vh;
+  }
+  svg:nth-child(8) {
+    left: 0;
+    bottom: 30vh;
+  }
+  svg:nth-child(9) {
+    left: 0;
+    bottom: 35vh;
+  }
+  svg:nth-child(10) {
+    left: 0;
+    bottom: 40vh;
+  }
+  svg:nth-child(11) {
+    left: 0;
+    bottom: 45vh;
+  }
+  svg:nth-child(12) {
+    left: 0;
+    bottom: 50vh;
+  }
+  svg:nth-child(13) {
+    left: 0;
+    bottom: 55vh;
+  }
+  svg:nth-child(14) {
+    left: 0;
+    bottom: 60vh;
+  }
+  svg:nth-child(15) {
+    left: 0;
+    bottom: 65vh;
+  }
+  svg:nth-child(16) {
+    left: 0;
+    bottom: 70vh;
+  }
+  svg:nth-child(17) {
+    left: 0;
+    bottom: 75vh;
+  }
+  svg:nth-child(18) {
+    left: 0;
+    bottom: 80vh;
+  }
+  svg:nth-child(19) {
+    left: 0;
+    bottom: 85vh;
+  }
+  svg:nth-child(20) {
+    left: 0;
+    bottom: 90vh;
+  }
+}
+
+/*
+.wavepath {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: dash 5s linear;
+  animation-fill-mode: forwards
+}
+
+@keyframes dash {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+*/
+
+.wavepath {
+  fill: transparent;
+  stroke: rgba(78, 121, 255, 0.15);
+  stroke-width: 1;
+  animation: fade 5s ease-in alternate infinite;
+}
+
+@keyframes fade {
+  from {
+    stroke-width: 1;
+  }
+  to {
+    stroke-width: 1.5;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .wavepath {
+    stroke: rgba(54, 97, 232, 0.1);
+  }
+}

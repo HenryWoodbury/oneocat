@@ -8,108 +8,22 @@
   svg {
     position: absolute;
     left: 0;
-    bottom: 0;
-  }
-  svg:nth-child(1) {
-    left: 0;
-    bottom: calc(10vh - 120px);
-  }
-  svg:nth-child(2) {
-    left: 0;
-    bottom: calc(15vh - 120px);
-  }
-  svg:nth-child(3) {
-    left: 0;
-    bottom: calc(19vh - 120px);
-  }
-  svg:nth-child(4) {
-    left: 0;
-    bottom: calc(23vh - 120px);
-  }
-  svg:nth-child(5) {
-    left: 0;
-    bottom: calc(27vh - 120px);
-  }
-  svg:nth-child(6) {
-    left: 0;
-    bottom: calc(31vh - 120px);
-  }
-  svg:nth-child(7) {
-    left: 0;
-    bottom: calc(35vh - 120px);
-  }
-  svg:nth-child(8) {
-    left: 0;
-    bottom: calc(39vh - 120px);
-  }
-  svg:nth-child(9) {
-    left: 0;
-    bottom: calc(43vh - 120px);
-  }
-  svg:nth-child(10) {
-    left: 0;
-    bottom: calc(47vh - 120px);
-  }
-  svg:nth-child(11) {
-    left: 0;
-    bottom: calc(51vh - 120px);
-  }
-  svg:nth-child(12) {
-    left: 0;
-    bottom: calc(55vh - 120px);
-  }
-  svg:nth-child(13) {
-    left: 0;
-    bottom: calc(59vh - 120px);
-  }
-  svg:nth-child(14) {
-    left: 0;
-    bottom: calc(63vh - 120px);
-  }
-  svg:nth-child(15) {
-    left: 0;
-    bottom: calc(67vh - 120px);
-  }
-  svg:nth-child(16) {
-    left: 0;
-    bottom: calc(71vh - 120px);
-  }
-  svg:nth-child(17) {
-    left: 0;
-    bottom: calc(75vh - 120px);
-  }
-  svg:nth-child(18) {
-    left: 0;
-    bottom: calc(79vh - 120px);
-  }
-  svg:nth-child(19) {
-    left: 0;
-    bottom: calc(83vh - 120px);
-  }
-  svg:nth-child(20) {
-    left: 0;
-    bottom: calc(87vh - 120px);
-  }
-  svg:nth-child(21) {
-    left: 0;
-    bottom: calc(91vh - 120px);
-  }
-  svg:nth-child(22) {
-    left: 0;
-    bottom: calc(95vh - 120px);
-  }
-  svg:nth-child(23) {
-    left: 0;
-    bottom: calc(99vh - 120px);
+    top: 0;
   }
 }
 
-/*
 .wavepath {
+  fill: transparent;
+  stroke: rgba(78, 121, 255, 0.2);
+  stroke-width: 1.5;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   animation: dash 5s linear;
   animation-fill-mode: forwards
+}
+
+.waveRight {
+  transform: rotate(180deg);
 }
 
 @keyframes dash {
@@ -120,13 +34,13 @@
     stroke-dashoffset: 0;
   }
 }
-*/
 
+/*
 .wavepath {
   fill: transparent;
-  stroke: rgba(78, 121, 255, 0.15);
-  stroke-width: 1;
-  animation: fade 5s ease-in alternate infinite;
+  stroke: rgba(78, 121, 255, 0.2);
+  stroke-width: 2;
+  animation: fade 3s ease-in alternate infinite;
 }
 
 @keyframes fade {
@@ -137,9 +51,10 @@
     stroke-width: 1.5;
   }
 }
+*/
 
 @media (prefers-color-scheme: light) {
   .wavepath {
-    stroke: rgba(54, 97, 232, 0.1);
+    stroke: rgba(54, 97, 232, 0.2);
   }
 }

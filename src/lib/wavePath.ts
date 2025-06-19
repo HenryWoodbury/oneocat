@@ -2,25 +2,24 @@ const calcDy = (dx: number, a: number) => dx * Math.tan((a * Math.PI) / 180);
 
 // Remember that m, s, c are relative points while M, S, C are absolute;
 const bezierPath = ({
-  curves = 4,
+  waves = 4,
   playX = 30,
   playY = 30,
   slopeMax = 15,
   svgHeight = 240,
   svgWidth = 1440,
 }) => {
-  const approximateSlice = Math.ceil(svgWidth / curves);
+  const waveLenth = Math.ceil(svgWidth / waves);
   const pathMiddle = Math.floor(svgHeight / 2);
   const mX = 0;
   const mY = pathMiddle - Math.floor(Math.random() * playY * 2 - playY);
   let pathData = `M ${mX} ${mY}`;
   const a1 = Math.floor(Math.random() * slopeMax * 2) - slopeMax;
-  const dxOffset = Math.floor(approximateSlice / 3);
+  const dxOffset = Math.floor(waveLenth / 3);
   const dx1 = dxOffset;
   const dy1 = pathMiddle - calcDy(dxOffset, a1);
-  console.log(pathMiddle, dy1)
-  for (let i = 1; i <= curves; i++) {
-    const dx = i === curves ? svgWidth : i * approximateSlice + Math.floor(Math.random() * playX * 2) - playX;
+  for (let i = 1; i <= waves; i++) {
+    const dx = i === waves ? svgWidth : i * waveLenth + Math.floor(Math.random() * playX * 2) - playX;
     const dy = pathMiddle - Math.floor(Math.random() * playY * 2 - playY);
     const a2 = Math.floor(Math.random() * slopeMax * 2) - slopeMax;
     const dx2 = dx - dxOffset;

@@ -6,7 +6,7 @@ const Waves: React.FC = () => {
   const svgHeight = 240;
   const viewBox = `0 0 ${svgWidth.toString()} ${svgHeight.toString()}`;
 //  const gap = ?; (number of waves is vh / gap)
-  const paths = Array(14)
+  const paths = Array(21)
     .fill(null)
     .map(() => bezierPath({
       svgWidth: svgWidth,

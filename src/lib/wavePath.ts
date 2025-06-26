@@ -1,60 +1,73 @@
-const calcDy = (dx: number, a: number) => dx * Math.tan((a * Math.PI) / 180);
+export type BezierCurve = {
+  startX: number;
+  startY: number;
+  endX: number;
+  endY: number;
+  dx1: number;
+  dy1: number;
+  dx2: number;
+  dy2: number;
+}
 
-// Remember that m, s, c are relative points while M, S, C are absolute;
-const bezierPath = ({
-  waves = 4,
+export type Path = BezierCurve[];
+
+const calcDy = (dx: number, a: number) => dx * Math.tan((a * Math.PI) / 180);
+const calcAngle = (slopeMax: number) => Math.floor(Math.random() * slopeMax * 2) - slopeMax;
+
+export const bezierPath = (
+  defaultEntry: BezierCurve,
+  curves = 3,
   playX = 30,
   playY = 30,
   slopeMax = 15,
-  svgHeight = 240,
-  svgWidth = 1440,
-}) => {
-  const waveLenth = Math.ceil(svgWidth / waves);
-  const pathMiddle = Math.floor(svgHeight / 2);
-  const mX = 0;
-  const mY = pathMiddle - Math.floor(Math.random() * playY * 2 - playY);
-  let pathData = `M ${mX} ${mY}`;
-  const a1 = Math.floor(Math.random() * slopeMax * 2) - slopeMax;
-  const dxOffset = Math.floor(waveLenth / 3);
-  const dx1 = dxOffset;
-  const dy1 = pathMiddle - calcDy(dxOffset, a1);
-  for (let i = 1; i <= waves; i++) {
-    const dx = i === waves ? svgWidth : i * waveLenth + Math.floor(Math.random() * playX * 2) - playX;
-    const dy = pathMiddle - Math.floor(Math.random() * playY * 2 - playY);
-    const a2 = Math.floor(Math.random() * slopeMax * 2) - slopeMax;
-    const dx2 = dx - dxOffset;
-    const dy2 = dy - calcDy(dxOffset, a2);
-    let c;
-    if (i === 1) {
-      c = ` C ${dx1} ${dy1} ${dx2} ${dy2}, ${dx} ${dy}`; 
-    } else {
-      c = ` S ${dx2} ${dy2} ${dx} ${dy}`; 
-    }
-    pathData += ` ${c}`;
+  waveLength = 100,
+  dxOffset = 33,
+  smooth = true,
+) => {
+  const p: Path = [];
+// How to get smooth lines? Need the slope of the line
+// Really badly written article here, with some code:
+// https://www.geeksforgeeks.org/javascript/how-to-draw-smooth-curve-through-multiple-points-using-javascript/
+// Very good geometric explanation here:
+// https://scaledinnovation.com/analytics/splines/aboutSplines.html
+// Source code for running the paths as a series of points and calculating smoothness through those points
+// with a constant that feeds an algorithm for identifying control points.
+// view-source:https://scaledinnovation.com/analytics/splines/splines.html
+
+  for (let i = 0; i < curves; i++) {
+    const a1 = calcAngle(slopeMax);
+    const a2 = calcAngle(slopeMax);
+    const lastEntry = i > 0 ? p[i - 1] : defaultEntry;
+    const endX = lastEntry.endX + waveLength + Math.floor(Math.random() * playX - playX / 2);
+    const endY = lastEntry.endY + Math.floor(Math.random() * playY - playY / 2);
+    const dx1 = lastEntry.endX + dxOffset;
+    const dy1 = smooth ? lastEntry.endY + lastEntry.dy2 : lastEntry.endY + calcDy(dxOffset, a1);
+    const dx2 = endX - dxOffset;
+    const dy2 = endY + calcDy(dxOffset, a2);
+    p.push({
+      startX: lastEntry.endX,
+      startY: lastEntry.endY,
+      endX: endX,
+      endY: endY,
+      dx1: dx1,
+      dy1: dy1,
+      dx2: dx2,
+      dy2: dy2,
+    });
   }
-  return pathData;
+  return p;
 }
 
-const sinPath = ({
-  frequency = 0.02,
-  amplitude = 80,
-  phase = 10,
-  svgHeight = 320,
-  svgWidth = 1440,
-}) => {
-  const waveFrequency = Math.random() * frequency;
-  const waveAmplitude = Math.random() * amplitude;
-  const wavePhase = Math.random() * phase;
-  const waveMiddle = svgHeight / 2;
-
-  let pathData = `M 0 ${waveMiddle}`
-
-  for (let x = 0; x < svgWidth; x++){
-      const y = waveAmplitude * Math.sin(waveFrequency * x + wavePhase) + waveMiddle;
-      pathData += `L ${x} ${y}`;
-  }
-  
-  return pathData; 
-}
-
-export { bezierPath, sinPath };
+export const drawPath = (ctx: CanvasRenderingContext2D, ps: BezierCurve) => {
+  ctx.beginPath();
+  ctx.moveTo(ps.startX, ps.startY);
+  ctx.bezierCurveTo(
+    ps.dx1, 
+    ps.dy1, 
+    ps.dx2, 
+    ps.dy2, 
+    ps.endX, 
+    ps.endY
+  );
+  ctx.stroke();
+};

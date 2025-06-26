@@ -1,12 +1,20 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+
 import './styles/root.css';
 import App from './App.tsx';
+import { WavesEffect } from './components/WavesEffect.tsx';
+
+/*
 import { Waves } from './components/Waves.tsx';
+import { MatrixEffect } from './components/MatrixEffect.tsx';
+    <Waves />
+    <MatrixEffect />
+*/
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />
-    <Waves />
+    <WavesEffect />
   </StrictMode>,
 );

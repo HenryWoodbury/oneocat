@@ -16,10 +16,10 @@
     text-align: center;
     background: linear-gradient(
       to right,
-      rgba(13, 14, 17, .1) 0%,
+      rgba(13, 14, 17, 0) 0%,
       rgba(13, 14, 17, .6) 30%,
       rgba(13, 14, 17, .6) 70%,
-      rgba(13, 14, 17, .1) 100%
+      rgba(13, 14, 17, 0) 100%
     );
     a {
       pointer-events: all;
@@ -67,10 +67,10 @@
     #slab {
       background: linear-gradient(
         to right,
-        rgba(255, 255, 255, .1) 0%,
+        rgba(255, 255, 255, 0) 0%,
         rgba(255, 255, 255, .6) 30%,
         rgba(255, 255, 255, .6) 70%,
-        rgba(255, 255, 255, .1) 100%
+        rgba(255, 255, 255, 0) 100%
       );    
     }
   }

@@ -12,6 +12,10 @@
   }
 }
 
+.wavefill {
+  fill: rgba(88, 153, 255, 0.3);
+}
+
 .wavepath {
   fill: transparent;
   stroke: rgba(88, 153, 255, 0.3);
@@ -54,6 +58,9 @@
 */
 
 @media (prefers-color-scheme: light) {
+  .wavefill {
+    fill: rgba(54, 97, 232, 0.2);
+  }
   .wavepath {
     stroke: rgba(54, 97, 232, 0.2);
   }

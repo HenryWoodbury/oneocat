@@ -1,7 +1,7 @@
 import { useRef, type MouseEvent } from 'react';
 
 import { useSize } from '../hooks/useSize';
-import { bezierPath } from '../lib/wavePath';
+import { bezierPath } from '../lib/svgPath';
 import { Delayer } from './Delayer';
 import css from '../styles/waves.module.css';
 

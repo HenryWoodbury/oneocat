@@ -52,7 +52,7 @@ const MatrixEffect = () => {
     }, 50);
   };
 
-  const draw = () => {
+  const animate = () => {
     if (!canvasContext) return;
     const isDisturbanceAffectedPosition = (dropIndex: number) => {
       return drops[dropIndex] * fontSize > disturbanceRow && dropIndex === disturbanceCol;
@@ -81,7 +81,7 @@ const MatrixEffect = () => {
   return (
     <div className={ classNames.join(' ') }>
       <Canvas 
-        draw={draw}
+        animate={animate}
         onMouseMove={disturbanceEffect}
         getCanvasContext={getCanvasContext} 
         getCanvasWidth={getCanvasWidth} 

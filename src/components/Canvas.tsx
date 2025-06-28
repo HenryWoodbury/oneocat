@@ -1,9 +1,24 @@
 import { useRef, useEffect, useState, type RefObject  } from 'react';
 
-import { type CanvasTypes} from '../lib/types';
+import { getPreferredScheme } from '../lib/colors';
 
-const Canvas = (props: CanvasTypes) => {
+export type CanvasProps = {
+  animate?: (i:number) => void;
+  draw?: () => void;
+  onMouseMove?: (e: React.MouseEvent<HTMLElement>) => void;
+  onMouseClick?: (e: React.MouseEvent<HTMLElement>) => void;
+  getCanvasContext?: (context: CanvasRenderingContext2D | null) => void;
+  getCanvasWidth?: (width: number) => void;
+  getCanvasHeight?: (height: number) => void;
+  fps?: number;  
+  width?: string;
+  height?: string;
+  classNames?: string[];
+}
+
+const Canvas = (props: CanvasProps) => {
   const { 
+    animate,
     draw, 
     fps = 30, 
     getCanvasContext, 
@@ -14,8 +29,15 @@ const Canvas = (props: CanvasTypes) => {
     onMouseMove
   } = props;
 
+  const currentTheme = getPreferredScheme();
   const canvasRef: RefObject<HTMLCanvasElement | null> = useRef(null);
   const [context, setContext] = useState<CanvasRenderingContext2D | null>(null);
+  const [theme, setTheme] = useState(currentTheme)
+
+  window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change', event => {
+    const preferredScheme = event.matches ? 'dark' : 'light';
+    setTheme(preferredScheme);
+  });
 
   const resizeCanvas = (context: CanvasRenderingContext2D) => {
 		const canvas = context.canvas;
@@ -51,23 +73,27 @@ const Canvas = (props: CanvasTypes) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Animated frame-based drawing
   useEffect(() => {
-// window.requestAnimationFrame is great for resource-conservation in that it pauses the 
-// animation when its tab is not in focus, but it has a potential drawback: it will match 
-// your browser’s display refresh rate to the best of its ability (depending on the 
-// computational load of your animation). This means that the perceived speed at which your
-// animation progresses is variable depending on the  user’s display and computational 
-// power at hand. 
-// 
-// So if we want to control the frame rate we need to add a timing functionality to our code. 
+// window.requestAnimationFrame wil pause the animation when its tab is not in focus, but 
+// it has a potential drawback: it will match your browser’s display refresh rate to the 
+// best of its ability (depending on the computational load of your animation). This means 
+// that the perceived speed at which your animation progresses is variable depending on the 
+// user’s display and computational power at hand. 
+// This means that to control the frame rate requires a timing function.
+
     let animationFrameId: number;
     let fpsInterval: number;
     let now: number;
     let then: number;
     let elapsed: number;
+    let i = 0;
+    let timer = 0; 
 
-    if (context) { 
+    if (context && animate) { 
       const render = () => {
+        // This is the code that redraws the canvas. use a conditional to limit the number
+        // of redraws for this particular render function.
         animationFrameId = window.requestAnimationFrame(render);
         now = Date.now();
         elapsed = now - then;
@@ -75,7 +101,12 @@ const Canvas = (props: CanvasTypes) => {
           // Get ready for next frame by setting then = now, but also adjust for your
           // specified fpsInterval not being a multiple of RAF's interval (16.7ms)
           then = now - (elapsed % fpsInterval);
-          draw();
+          timer++;
+          if (timer === 30) {
+            animate(i);           
+            i++;
+            timer = 0;
+          }
         }
       };
       const startRendering = (fps: number) => {
@@ -88,7 +119,14 @@ const Canvas = (props: CanvasTypes) => {
     return () => {
       window.cancelAnimationFrame(animationFrameId);
     };
-  }, [draw, context, fps]);
+  }, [animate, context, fps, theme]);
+
+  // One time draw
+  useEffect(() => {
+    if (context && draw) { 
+      draw();
+    }
+  }, [draw, context, theme]);
 
   return (
       <canvas ref={canvasRef} style={{ width: width, height: height }} onMouseMove={onMouseMove}/>

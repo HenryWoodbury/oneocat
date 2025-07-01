@@ -2,16 +2,14 @@
 
 Portfolio.
 
-## TO DO
-
-https://www.npmjs.com/package/@react-hook/resize-observer
-
-## Some inspiration:
+## Some information and inspiration:
 
 ### Canvas
 
 https://scaledinnovation.com/analytics/splines/aboutSplines.html
 https://medium.com/@ruse.marshall/converting-a-vanilla-js-canvas-animation-to-react-78443bad6d7b
+https://developer.mozilla.org/en-US/docs/Games/Anatomy
+https://dr-nick-nagel.github.io/blog/raf-time.html
 
 ### SVG
 

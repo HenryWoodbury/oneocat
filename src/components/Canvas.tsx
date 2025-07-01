@@ -92,15 +92,24 @@ const Canvas = (props: CanvasProps) => {
 
     if (context && animate) { 
       const render = () => {
-        // This is the code that redraws the canvas. use a conditional to limit the number
-        // of redraws for this particular render function.
+// Best practice is to request the animation frame as the first call in the render loop.
+// This allows the browser to best manage the canvas animation against the vsync window
+// managed by the OS and graphics card.
         animationFrameId = window.requestAnimationFrame(render);
         now = Date.now();
+// milliseconds since last render
         elapsed = now - then;
+// Use a timing conditional to determine whether the render actually does anything. Here
+// the elapsed milliseconds must be greater than the frames per second interval.
         if (elapsed > fpsInterval) {
-          // Get ready for next frame by setting then = now, but also adjust for your
-          // specified fpsInterval not being a multiple of RAF's interval (16.7ms)
+// Set then = now, but also ensure that to adjust for the requestAnimationFrame's own internal
+// interval (16.7ms on 60hz monitor). The actual "then" may be a few milliseconds different
+// than the "then" captured in the last loop.
+//
+// window.requestAnimationFrame() always provides a DOMHighResTimeStamp as a return value. So 
+// this is a default argument for the render callback -- render(tframe)
           then = now - (elapsed % fpsInterval);
+// A very simple timer that waits a full second (30 frames) to run the animation.
           timer++;
           if (timer === 30) {
             animate(i);           
@@ -134,3 +143,64 @@ const Canvas = (props: CanvasProps) => {
 };
 
 export { Canvas }
+
+/* 
+Some examples for handling tick time
+
+https://www.reddit.com/r/webdev/comments/8r0xw4/how_do_you_make_an_animation_like_this/
+
+const animateIcon = icon => {
+  const time = { total: 12000 };
+  const maxDistance = 120;
+  const maxRotation = 800;
+  const transform = {};
+  define(transform, "translateX", getRandomInt(-maxDistance, maxDistance));
+  define(transform, "translateY", getRandomY(transform.translateX, 60, maxDistance));
+  define(transform, "rotate", getRandomInt(-maxRotation, maxRotation));
+
+  const tick = now => {
+    if (time.start == null) define(time, "start", now);
+    define(time, "elapsed", now - time.start);
+    const progress = easeOutQuart(time.elapsed, 0, 1, time.total);
+
+    icon.style.opacity = Math.abs(1 - progress);
+    icon.style.transform = Object.keys(transform).map(key => {
+      const value = transform[key] * progress;
+      const unit = /rotate/.test(key) ? "deg" : "px";
+      return `${key}(${value}${unit})`;
+    }).join(" ");
+
+    time.elapsed < time.total
+    ? requestAnimationFrame(tick)
+    : programmingLanguages.removeChild(icon);
+  };
+
+  requestAnimationFrame(tick);
+};
+
+https://www.reddit.com/r/webdev/comments/19c05to/efficient_use_of_requestanimationframe_for_10_fps/
+
+let prevTickTime
+// tick() updates and renders our game
+function tick(timestamp: number) {
+  if (!prevTickTime) {
+    prevTickTime = timestamp
+  }
+  // deltaTime measures the time between frames
+  let deltaTime = timestamp - prevTickTime
+  prevTickTime = timestamp
+  // Update the game
+  game.update(deltaTime)
+  // Render the game
+  game.render(deltaTime)
+  requestAnimationFrame(tick)
+}
+requestAnimationFrame(tick)
+
+
+
+cancelAnimationFrame(requestID);
+
+
+
+*/

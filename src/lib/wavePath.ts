@@ -3,6 +3,16 @@ export type Grid2D = {
   y: number;
 };
 
+export type Wave = {
+  start: Grid2D[];
+  end?: Grid2D[];
+  tension: number;
+  gap?: number;
+  speed?: number
+}
+
+export type Waves = Wave[];
+
 // With cp2, draw a bezier curve. Without draw a quadratic curve.
 export type Curve = {
   start: Grid2D;

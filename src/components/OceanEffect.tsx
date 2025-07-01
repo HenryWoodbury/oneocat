@@ -108,7 +108,9 @@ const OceanEffect = () => {
     });
   };
 
-
+  const animate = () => {
+    
+  }
 
   return (
     <div className={ classNames.join(' ') }>

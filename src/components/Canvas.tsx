@@ -73,69 +73,57 @@ const Canvas = (props: CanvasProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Animated frame-based drawing
+  // window.requestAnimationFrame will pause the animation when its tab is not in focus.
+  // It also maps to browser display rate, which is usually 60hz, but not always. And it
+  // may be impacted by computational load. Thus, animations should use a timing function
+  // to control the frame rate. The callback provided to requestAnimationFrame
   useEffect(() => {
-// window.requestAnimationFrame wil pause the animation when its tab is not in focus, but 
-// it has a potential drawback: it will match your browser’s display refresh rate to the 
-// best of its ability (depending on the computational load of your animation). This means 
-// that the perceived speed at which your animation progresses is variable depending on the 
-// user’s display and computational power at hand. 
-// This means that to control the frame rate requires a timing function.
-
-    let animationFrameId: number;
-    let fpsInterval: number;
-    let now: number;
-    let then: number;
-    let elapsed: number;
-    let i = 0;
-    let timer = 0; 
-
+    // This should be abstracted as an object passed to Canvas that includes an animate()
+    // callback. For now, define it here. I've also seen code that manages fps here and
+    // a tick counter that sets the callbacks on a set cadence (i.e. once per frame)
+    const waveHandler = {
+      frameId: 0, // will be overwritten
+      lastUpdateTime: performance.now(), // Track time between updates
+      lastRenderTime: performance.now(), // Track time between renders
+      frameInterval: 1000 / 30, // 30 frames per second
+    }
+    // Need canvas context and a callback function
     if (context && animate) { 
-      const render = () => {
-// Best practice is to request the animation frame as the first call in the render loop.
-// This allows the browser to best manage the canvas animation against the vsync window
-// managed by the OS and graphics card.
-        animationFrameId = window.requestAnimationFrame(render);
-        now = Date.now();
-// milliseconds since last render
-        elapsed = now - then;
-// Use a timing conditional to determine whether the render actually does anything. Here
-// the elapsed milliseconds must be greater than the frames per second interval.
-        if (elapsed > fpsInterval) {
-// Set then = now, but also ensure that to adjust for the requestAnimationFrame's own internal
-// interval (16.7ms on 60hz monitor). The actual "then" may be a few milliseconds different
-// than the "then" captured in the last loop.
-//
-// window.requestAnimationFrame() always provides a DOMHighResTimeStamp as a return value. So 
-// this is a default argument for the render callback -- render(tframe)
-          then = now - (elapsed % fpsInterval);
-// A very simple timer that waits a full second (30 frames) to run the animation.
-          timer++;
-          if (timer === 30) {
-            animate(i);           
-            i++;
-            timer = 0;
-          }
+      // See MDN Web Docs, https://developer.mozilla.org/en-US/docs/Games/Anatomy for the some 
+      // source info on this logic. tFrame is always the last RAF timestamp passed by the callback
+      // Also https://stackoverflow.com/questions/19764018/controlling-fps-with-requestanimationframe
+      // and https://jsfiddle.net/chicagogrooves/nRpVD/2/ for the code to sync precisely to frame rate.
+      const render = (tFrame: number) => {
+        // Best practice is to call the requestAnimationFrame at the top of the render function.
+        // By assigning the current frameId to our object, we can cancel the animation request
+        // that corresponds to the ID. window.cancelAnimationFrame(waveHandler.lastFrame);
+        waveHandler.frameId = window.requestAnimationFrame(render);
+        // Typically a complex animation, such as a game, would separate computation from rendering
+        // A multipler property or separate frameInterval properties can determine cadence for each
+        // type of callback function
+        const elapsedTime = tFrame - waveHandler.lastRenderTime;
+        if (elapsedTime > waveHandler.frameInterval) {
+          // For an increment counter, tFrame may actually be fractionally off our fps, so back off
+          // lastRenderTime by the modulo of elapsedTime and frameInterval 
+          waveHandler.lastRenderTime = tFrame - (elapsedTime % waveHandler.frameInterval);
+          // Pass waveHandler.lastRenderTime to the animation function for any time-based processing.
+          animate(waveHandler.lastRenderTime);
         }
-      };
-      const startRendering = (fps: number) => {
-        fpsInterval = 1000 / fps;
-        then = Date.now();
-        render();
-      };
-      startRendering(fps);
+      }
+      // Initial call to render
+      render(performance.now());
     }
     return () => {
-      window.cancelAnimationFrame(animationFrameId);
+      window.cancelAnimationFrame(waveHandler.frameId);
     };
-  }, [animate, context, fps, theme]);
+  }, [animate, context]);
 
   // One time draw
   useEffect(() => {
     if (context && draw) { 
       draw();
     }
-  }, [draw, context, theme]);
+  }, [draw, context]);
 
   return (
       <canvas ref={canvasRef} style={{ width: width, height: height }} onMouseMove={onMouseMove}/>
@@ -143,64 +131,3 @@ const Canvas = (props: CanvasProps) => {
 };
 
 export { Canvas }
-
-/* 
-Some examples for handling tick time
-
-https://www.reddit.com/r/webdev/comments/8r0xw4/how_do_you_make_an_animation_like_this/
-
-const animateIcon = icon => {
-  const time = { total: 12000 };
-  const maxDistance = 120;
-  const maxRotation = 800;
-  const transform = {};
-  define(transform, "translateX", getRandomInt(-maxDistance, maxDistance));
-  define(transform, "translateY", getRandomY(transform.translateX, 60, maxDistance));
-  define(transform, "rotate", getRandomInt(-maxRotation, maxRotation));
-
-  const tick = now => {
-    if (time.start == null) define(time, "start", now);
-    define(time, "elapsed", now - time.start);
-    const progress = easeOutQuart(time.elapsed, 0, 1, time.total);
-
-    icon.style.opacity = Math.abs(1 - progress);
-    icon.style.transform = Object.keys(transform).map(key => {
-      const value = transform[key] * progress;
-      const unit = /rotate/.test(key) ? "deg" : "px";
-      return `${key}(${value}${unit})`;
-    }).join(" ");
-
-    time.elapsed < time.total
-    ? requestAnimationFrame(tick)
-    : programmingLanguages.removeChild(icon);
-  };
-
-  requestAnimationFrame(tick);
-};
-
-https://www.reddit.com/r/webdev/comments/19c05to/efficient_use_of_requestanimationframe_for_10_fps/
-
-let prevTickTime
-// tick() updates and renders our game
-function tick(timestamp: number) {
-  if (!prevTickTime) {
-    prevTickTime = timestamp
-  }
-  // deltaTime measures the time between frames
-  let deltaTime = timestamp - prevTickTime
-  prevTickTime = timestamp
-  // Update the game
-  game.update(deltaTime)
-  // Render the game
-  game.render(deltaTime)
-  requestAnimationFrame(tick)
-}
-requestAnimationFrame(tick)
-
-
-
-cancelAnimationFrame(requestID);
-
-
-
-*/

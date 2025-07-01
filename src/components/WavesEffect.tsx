@@ -108,8 +108,10 @@ const WavesEffect = () => {
     });
   };
 
-  const animate = () => {
+  const animate = (elapsed) => {
     if (!canvasContext) return;
+    // Animate will be limited to one redraw per second
+    if (elapsed < 1000/30) return;
     const fillStyle = getPreferredScheme() === 'dark' ? 'rgb(13 14 17)' : 'rgb(255 255 255)';
     const overlayFillStyle = getPreferredScheme() === 'dark' ? 'rgb(13 14 17 / 3%)' : 'rgb(255 255 255 / 4%)';
     const strokeStyle = getPreferredScheme() === 'dark' ? 'rgb(97 176 255 / 20%)' : 'rgb(20 30 255 / 20%)';
@@ -133,8 +135,8 @@ const WavesEffect = () => {
   return (
     <div className={ classNames.join(' ') }>
       <Canvas 
-//        animate={drawUp}
-        draw={draw}
+        animate={animate}
+//        draw={draw}
 //        onMouseMove={disturbanceEffect}
         getCanvasContext={getCanvasContext} 
       />

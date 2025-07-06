@@ -26,7 +26,6 @@ function App() {
           <ul>
             <li><a href="https://www.linkedin.com/in/henry-woodbury-35b02737/" target="_blank">LinkedIn</a></li>
             <li><a href="https://github.com/HenryWoodbury" target="_blank">Github</a></li>
-            <li><a href="https://oneocat.substack.com/" target="_blank">Substack</a></li>
           </ul>
         </div>
       </div>
